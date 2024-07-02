@@ -1,6 +1,23 @@
-# Federated-Learning-Experiment Environment using PyTorch
+# Federated Learning Experiment Environment using PyTorch
 
 This project provides an environment for conducting federated learning experiments using PyTorch. It supports various datasets and data partitioning strategies to illustrate the effectiveness of the federated learning paradigm.
+
+## Table of Contents
+
+- [Federated Learning Experiment Environment using PyTorch](#federated-learning-experiment-environment-using-pytorch)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Data](#data)
+  - [Running Baseline Models](#running-baseline-models)
+    - [Non-Federated Fashion](#non-federated-fashion)
+    - [Federated Averaging Algorithm](#federated-averaging-algorithm)
+      - [Data Partitioning Strategies](#data-partitioning-strategies)
+  - [Federated Learning Algorithms](#federated-learning-algorithms)
+  - [Client Statistics](#client-statistics)
+  - [Example Commands](#example-commands)
+  - [Supported Datasets](#supported-datasets)
+  - [Hyperparameters](#hyperparameters)
+  - [References](#references)
 
 ## Requirements
 
@@ -28,97 +45,87 @@ Deactivate the Conda environment when finished:
 conda deactivate
 ```
 
-If you install any dependencies, update the environment file manually to ensure portability:
+Update the environment if dependencies are added:
 
 ```bash
 conda env export > environment.yml
-```
-
-To update the environment from a file:
-
-```bash
 conda env update --file environment.yml --prune
 ```
 
 ## Data
 
-- Download train and test datasets manually or they will be automatically downloaded from Torchvision datasets using the command:
+- Download datasets manually or automatically from Torchvision:
 
 ```bash
 python -m federated_learning download-torchvision-datasets <dataset_path> <dataset>
 ```
 
-- Experiments are run on MNIST, Fashion-MNIST, CIFAR-10, CIFAR-100, and other datasets.
-- To use your own dataset: Move your dataset to the data directory and write a wrapper on the PyTorch dataset class.
+- Supports MNIST, Fashion-MNIST, CIFAR-10, CIFAR-100, and more.
+- Use custom datasets by placing them in the data directory and writing a PyTorch dataset wrapper.
 
-## Running the Baseline Model in a Non-Federated Fashion
+## Running Baseline Models
 
-To run the baseline experiment with MNIST on MLP using CPU:
+### Non-Federated Fashion
+
+Example command for MNIST with MLP on CPU simulating centralized training:
 
 ```bash
-python -m federated_learning federated-learning-baseline ./ --model=mlp --dataset=mnist --number_of_epochs=10
+python -m federated_learning central_learning  <output_path> --model=mlp --dataset=mnist --number_of_epochs=10
 ```
 
-## Running Baseline Federated Averaging Algorithm
+### Federated Averaging Algorithm
 
-### Data Partitioning Strategies
+#### Data Partitioning Strategies
 
-The data partitioning strategies implemented include:
+- **Homogeneous (IID):** Equal, IID data distribution.
+- **Label-Imbalance:** Imbalances controlled by Dirichlet distribution.
+- **Fixed Subset of Labels:** Clients have specific distinct labels.
+- **Varying Sample Size:** IID data with varying sample sizes.
+- **Real-World:** Partitioned based on real word user (e.g., different authors have different writing styles).
 
-- **Homogeneous (IID):** Data is split equally and distributed in an IID fashion.
-- **Label-Imbalance:** Data distribution is controlled by a Dirichlet distribution to create imbalances.
-- **Fixed Subset of Labels:** Each client has a specified number of distinct labels.
-- **Varying Sample Size:** Data is distributed IID but with varying sample sizes among clients.
-- **Real-World:** Real-world datasets are partitioned based on user indices.
-
-To run federated averaging with CIFAR-10 on a CNN with 5 local epochs, 10 clients per communication round, and IID data per client:
+Example command for CIFAR-10 with CNN, 5 local epochs, 10 clients per round, and IID data:
 
 ```bash
-python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=homo
+python -m federated_learning fedavg <output_path> --number_of_runs=1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=homo
 ```
 
-To run federated averaging with CIFAR-10 on a CNN with 5 local epochs, 10 clients per communication round, and only 3 labels per client:
+## Federated Learning Algorithms
+
+Supports various algorithms such as FedProx, FedNova, and SCAFFOLD. Use the command structure:
 
 ```bash
-python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=noniid-label3
-```
-
-To run federated averaging with CIFAR-10 on a CNN with 5 local epochs, 10 clients per communication round, and varying dataset size per client:
-
-```bash
-python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=vary-datasize
-```
-
-## Additional Federated Learning Algorithms
-
-Apart from the standard federated averaging, other algorithms such as FedProx, FedNova, and SCAFFOLD are implemented. Each algorithm can be run with the following command structure:
-
-```bash
-python -m federated_learning <algorithm-name> ./ <number_of_runs> --model=<model_type> --dataset=<dataset> --local_epochs=<local_epochs> --iidness=<iidness>
-```
-
-For example, to run FedNova with MNIST on MLP using non-IID data:
-
-```bash
-python -m federated_learning fednova ./ 1 --model=mlp --dataset=mnist --local_epochs=10 --iidness=noniid-label3
+python -m federated_learning <algorithm-name> --output_path=<output_path> --number_of_runs=<number_of_runs> --model=<model_type> --dataset=<dataset> --local_epochs=<local_epochs> --iidness=<iidness>
 ```
 
 ## Client Statistics
 
-Client statistics during training, such as global accuracy and loss, are logged and saved. The performance is evaluated every specified number of communication rounds, and the results are written to a CSV file.
+Client statistics during training, such as global accuracy and loss, are logged and saved, evaluated every specified number of communication rounds, and written to a CSV file.
 
 ## Example Commands
 
-To run federated averaging with CIFAR-10 on CNN with 5 local epochs, 10 clients per communication round, and data distribution based on label imbalances:
+Run federated averaging with CIFAR-10 on CNN, 5 local epochs, 10 clients per round, and label imbalance:
 
 ```bash
-python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=label-imbalance
+python -m federated_learning fedavg --output_path=./ --number_of_runs=1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=label-imbalance
 ```
 
-To run federated averaging with CIFAR-10 on CNN with 5 local epochs, 10 clients per communication round, and IID quantity skew:
+Run SCAFFOLD with CIFAR-10 on CNN, 5 local epochs, 10 clients per round, and IID data:
 
 ```bash
-python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=homogeneous
+python -m federated_learning scaffold --output_path=./ --number_of_runs=1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=homo
+```
+
+Run FedProx with CIFAR-10 on CNN, 5 local epochs, 10 clients per round, and non-IID label imbalance:
+
+```bash
+python -m federated_learning fedprox --output_path=./ --number_of_runs=1 --model=cnn --dataset=cifar --local_epochs=10 --iidness=label-imbalance --set_proximal_parameter=0.1
+```
+
+Example command for running FedNova with CIFAR-10 on CNN, 5 local epochs, 10 clients per round, and repeating the experiment 3 times with incrementing seeds starting at 0:
+
+```bash
+python -m federated_learning -r 0 fednova --output_path=./  -number_of_runs=3 --model=cnn --dataset=cifar --local_epochs=10 --iidness=homo --seed_start=0
+
 ```
 
 ## Supported Datasets
@@ -130,3 +137,31 @@ python -m federated_learning federated-averaging ./ 1 --model=cnn --dataset=cifa
 - CINIC-10
 - FEMNIST
 - FMNIST
+
+## Hyperparameters
+
+- `number_of_runs`: Number of repetitions for the experiments.
+- `number_of_training_rounds (-R)`: Number of training rounds.
+- `number_of_clients (-n)`: Number of clients in the federated setting.
+- `fraction_of_clients (-f)`: Fraction of clients participating in training.
+- `local_epochs (-e)`: Number of local epochs per client.
+- `local_batchsize (-b)`: Local batch size during training.
+- `global_batchsize (-B)`: Global batch size during validation.
+- `learning_rate (-l)`: Learning rate for training.
+- `learning_rate_decay (-D)`: Decay rate of the learning rate.
+- `set_momentum (-m)`: Momentum for the optimizer.
+- `weight_decay (-W)`: Weight decay rate during optimization.
+- `model_type (-t)`: Neural network architecture for local training.
+- `use_gpu (-g)`: Use CUDA for training.
+- `optimizer (-o)`: Type of optimizer (`sgd`, `adam`).
+- `iidness (-i)`: Type of IID/non-IID data distribution.
+- `set_dirichlet_distribution_parameter (-I)`: Parameter for Dirichlet distribution to simulate label skew.
+- `set_proximal_parameter (-p)`: Proximal parameter for FedProx.
+- `eval_every_x_round (-E)`: Frequency of performance evaluation of the clients with respect to the global dataset.
+
+## References
+
+- **FedAvg**: McMahan, B., Moore, E., Ramage, D., Hampson, S., & Arcas, B. A. y. (2017). [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629). AISTATS.
+- **FedProx**: Li, T., Sahu, A. K., Talwalkar, A., & Smith, V. (2020). [Federated Optimization in Heterogeneous Networks](https://arxiv.org/abs/1812.06127). MLSys.
+- **FedNova**: Wang, J., Yurochkin, M., Sun, Y., Papailiopoulos, D., & Khazaeni, Y. (2020). [Tackling the Objective Inconsistency Problem in Heterogeneous Federated Optimization](https://arxiv.org/abs/2007.07481). ICLR.
+- **SCAFFOLD**: Karimireddy, S. P., Kale, S., Mohri, M., Reddi, S., Stich, S. U., & Suresh, A. T. (2020). [SCAFFOLD: Stochastic Controlled Averaging for Federated Learning](https://arxiv.org/abs/1910.06378). ICML.
