@@ -11,7 +11,7 @@ This project provides an environment for conducting federated learning experimen
   - [Running Baseline Models](#running-baseline-models)
     - [Non-Federated Fashion](#non-federated-fashion)
     - [Federated Averaging Algorithm](#federated-averaging-algorithm)
-      - [Data Partitioning Strategies](#data-partitioning-strategies)
+  - [Data Partitioning Strategies](#data-partitioning-strategies)
   - [Federated Learning Algorithms](#federated-learning-algorithms)
   - [Client Statistics](#client-statistics)
   - [Example Commands](#example-commands)
