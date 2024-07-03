@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+%files
+
+    ./federated_learning /opt/federated_learning
+    ./environment.yml /opt/environment.yml
+
+%post
+    apt-get update && apt-get install -y libtiff5
+    . /opt/conda/etc/profile.d/conda.sh
+    conda install -n base conda-libmamba-solver
+    conda config --set solver libmamba
+    conda env create --file /opt/environment.yml
+    conda activate andreas-lutz-master-thesis
+    ln -sfn ./opt/conda/envs/andreas-lutz-master-thesis/lib/libnvrtc.so.11.8.89 ./opt/conda/envs/andreas-lutz-master-thesis/lib/libnvrtc.so
+
+
+    # Download the Cifar10 dataset and store it locally in the container under /opt/...
+    cd /opt
+    python -u -m federated_learning download-torchvision-datasets ./datasets cifar10
+
+%runscript
+
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate andreas-lutz-master-thesis
+
+    cd /opt
+    python -u -m federated_learning "$@"
+
+
