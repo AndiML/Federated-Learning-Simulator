@@ -18,6 +18,8 @@ This project provides an environment for conducting federated learning experimen
   - [Supported Datasets](#supported-datasets)
   - [Hyperparameters](#hyperparameters)
   - [References](#references)
+  - [Author](#author)
+  - [License](#license)
 
 ## Requirements
 
@@ -165,3 +167,12 @@ python -m federated_learning -r 0 fednova --output_path=./  -number_of_runs=3 --
 - **FedProx**: Li, T., Sahu, A. K., Talwalkar, A., & Smith, V. (2020). [Federated Optimization in Heterogeneous Networks](https://arxiv.org/abs/1812.06127). MLSys.
 - **FedNova**: Wang, J., Yurochkin, M., Sun, Y., Papailiopoulos, D., & Khazaeni, Y. (2020). [Tackling the Objective Inconsistency Problem in Heterogeneous Federated Optimization](https://arxiv.org/abs/2007.07481). ICLR.
 - **SCAFFOLD**: Karimireddy, S. P., Kale, S., Mohri, M., Reddi, S., Stich, S. U., & Suresh, A. T. (2020). [SCAFFOLD: Stochastic Controlled Averaging for Federated Learning](https://arxiv.org/abs/1910.06378). ICML.
+
+## Author
+
+https://github.com/AndiML
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
