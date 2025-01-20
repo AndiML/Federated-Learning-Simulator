@@ -1,5 +1,10 @@
 # Federated Learning Experiment Environment using PyTorch
 
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
+![GitHub stars](https://img.shields.io/github/stars/AndiML/Action-Recognition-System.svg?style=social&label=Stars)
+![Contributors](https://img.shields.io/github/contributors/AndiML/Action-Recognition-System.svg)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#license) 
+
 This project provides an environment for conducting federated learning experiments using PyTorch. It supports various datasets and data partitioning strategies to illustrate the effectiveness of the federated learning paradigm.
 
 ## Table of Contents
